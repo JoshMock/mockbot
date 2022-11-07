@@ -79,80 +79,6 @@ Simple example module that just echoes what user said.
 
 * !echo Hello, world!
 
-### Metar
-
-Aviation weather metar service access.
-
-* !metar eftp
-
-### TAF
-
-Aviation weather TAF service access.
-
-* !taf eftp
-
-### NOTAM
-
-Aviation NOTAM data access. Currently supports only Finnish airports - implement other countries where
-data is available.
-
-* !notam efjm
-
-### Teamup
-
-Can access Teamup ( https://teamup.com/ ) calendar. Teamup has nice API and is easier to set up than Google so
-prefer it if possible. This bot polls the calendar every 5 minutes and notifies the room of any changes.
-
-Howto:
-
-* Create a calendar in Teamup https://teamup.com/
-* Get api key at https://teamup.com/api-keys/request
-* !teamup apikey [your api key]
-* !teamup add [calendar id]
-
-Commands:
-
-* !teamup apikey [apikey] - set api key (Must be done as bot owner)
-* !teamup - list upcoming events in calendar
-* !teamup add [calendar id] - add calendar to this room (Must be done as room admin)
-* !teamup del [calendar id] - delete calendar from this room (Must be done as room admin)
-* !teamup list - list calendars in this room
-* !teamup poll - poll now for changes (Must be done as bot owner)
-
-### Google Calendar
-
-Can access a google calendar in a room. This is a bit pain to set up, sorry.
-
-To set up, you'll need to generate oauth2 credentials.json file - see https://console.developers.google.com/apis/credentials
-
-Run the bot on *local* machine as OAuth2 wants to open localhost url in your browser. I haven't found out an easy way to
-do this on server.
-
-There is a empty credentials.json file in the bot directory. Replace it with yours. When credentials.json is present, you must
-authenticate the bot to access calendar. There will be a link in console like this:
-
-``` text
-Please visit this URL to authorize this application: https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=907....
-```
-
-Open the link and authenticate as needed. A new file token.pickle will be created in the directory and bot will read it in future.
-Save the token.pickle and ship it with the bot to your server.
-
-Now the bot should be usable.
-
-Use !googlecal add [calendar id] to add new calendar to a room. The bot lists availble calendar ID's on startup and you can find them
-in google calendar.
-
-Commands:
-
-* !googlecal - Show next 10 events in calendar
-* !googlecal today - Show today's events
-* !googlecal add [calendar id] - Add new calendar to room (Must be done as room admin)
-* !googlecal del [calendar id] - Delete calendar from room (Must be done as room admin)
-* !googlecal list - List calendars in this room
-
-NOTE: disabled by default
-
 ### Cron
 
 Can schedule things to be done.
@@ -240,54 +166,6 @@ without any authentication or api key.
 See: https://github.com/realsirjoe/instagram-scraper/
 
 NOTE: disabled by default
-
-#### Matrix Messaging API (mxma)
-
-This is a simple API to ask bot to send messages in Matrix using JSON file from external service.
-
-You'll need an API endpoint (webserver) that contains a message queue. It must respond with following JSON to a HTTP GET request:
-
-```json
-{
-   "messages":[
-      {
-         "to": "@example:matrix.org",
-         "title": "Room Title",
-         "message": "Hello from Hemppa"
-      },
-      {
-         "to": "@another:matrix.user",
-         "title": "Room 2 Title",
-         "message": "Second message"
-      }
-   ]
-}
-```
-
-Normally you want to clear the messages when the endpoint is GETted or the messages will repeat
-every time bot updates itself.
-
-These messages are sent to given Matrix users in private message with given room title.
-Messages are sent "best effort" - if sending fails, it will be logged to bot output log.
-
-Then just:
-
-* !mxma add http://url.to.the/endpoint.json
-
-mxma requires all commands to be run as bot owner.
-
-#### SpaceAPI
-
-Polls the status of Hack- and Makerspaces that provide an endpoint
-that conforms to the [SpaceAPI](https://spaceapi.io/) protocol and notifies 
-about changes of the opening status.
-
-To add a new endpoint simply use 
-`!spaceapi add https://hackspace.example.org/status`
-
-For Admins: A template and I18N can be configured via settings of 
-the module. Use `!bot export spacepi`, then change the 
-settings and import again with `!bot import spacepi SETTINGS`.
 
 ### Url
 
@@ -388,52 +266,6 @@ Commands:
 * !wafull [query] - Query wolfram alpha and return all pods.
 * !wa appid [appid] - Set appid (must be done as bot owner)
 
-### OGN Field Log (FLOG)
-
-Open Glider Network maintains a unified tracking platform for gliders, drones and other aircraft.
-
-Read more about OGN at https://www.glidernet.org/
-
-FLOG module supports showing field logs for OGN receivers and can display live
-field log in a room. It can also show latest known location of an aircraft
-using !sar command.
-
-It uses FlightBook instance at https://flightbook.glidernet.org/
-
-FlightBook sources and documentation at https://gitlab.com/lemoidului/ogn-flightbook
-
-
-Real life field log output looks something like:
-
-```
-Flights at Chateau Arnoux St Auban (LFMX) 2021-04-09:
-13:36-18:01 04:24 F-CLDG JS-3 18M FM 2291m
-13:46-··:··       F-CIFF Arcus T FP
-13:57-17:13 03:15 JS-1 C21 72 2636m
-14:08-17:30 03:22 ZS-GCC JS-1 C21 FD 2754m
-18:29-··:··       F-CLDG JS-3 18M FM
-```
-
-Commands and examples:
-
-(You must be room admin for all commands)
-
-* !flog station EFJM - set the default station to track for this room
-* !flog rmstation - remove station from this room
-* !flog - Show field flog for the room's station (can be used by any user)
-* !flog EFJM - Show field flog for any station (can be used by any user)
-* !flog status - print status of this room
-* !flog live - enable live field log for this room
-* !flog rmlive - disable live field log for this room
-* !sar OH-123 - Send latest known location of aircraft OH-123
-
-NOTE: disabled by default
-
-### Jitsi
-
-If enabled, Jitsi calls created with Matrix clients will be sent as text messages
-to rooms, allowing non-matrix users to join them.
-
 ### Mastodon
 
 Send toots to Mastodon. You can login to Mastodon with the bot and toot with it.
@@ -484,27 +316,6 @@ File uploads, joins, leaves or other special events are not (yet) handled. Contr
 
 Relaybots are stupid. Please prefer real Matrix bridges to this. Sometimes there's no alternative.
 
-### Printing
-
-With this module you can set up a room to print any uploaded files on a specified printer.
-The printer must be visible to bot via CUPS.
-
-Commands (all can be done by bot owner only):
-
-* !printing list - Lists available printers and their rooms
-* !printing setroomprinter [printername] - Assignes given printer to this room
-* !printing rmroomprinter - Deletes printer from this room
-* !printing setpapersize [papersize] - Set global paper size. Default is A4. See printer settings for valid values.
-
-The module sends the files to CUPS for printing so please see CUPS documentation
-on what works and what doesn't.
-
-Tested formats: PDF, JPG, PNG
-
-SVG files are printed as text currently, avoid printing them.
-
-This module is disabled by default.
-
 ### Giphy
 
 Can be used to post a picture from giphy given a query string.
@@ -538,83 +349,6 @@ Commands:
 Example:
 
 * !gfycat test
-
-### Tautulli
-
-Can be used to fetch recently added information from Tautulli or receive Tautulli recently added notification webhook
-
-Commands:
-
-* !tautulli apikey [apikey]             - Set api key (Must be done as bot owner)
-* !tautulli movie                       - Show the last 10 recently added movies to Plex library monitered by Tautulli
-* !tautulli show                        - Show the last 10 recently added tv series epsiodes to Plex library monitered by Tautulli
-* !tautulli artist                      - Show the last 10 recently added music artists to Plex library monitered by Tautulli
-* !tautulli add [room_id] encrypted     - Add the provided encrypted [room_id] to the list of rooms to post the recently added notifications received by the webhook
-* !tautulli add [room_id] plain         - Add the provided unencrypted [room_id] to the list of rooms to post the recently added notifications received by the webhook
-* !tautulli remove [room_id] encrypted  - Remove the provided encrypted [room_id] to the list of rooms to post the recently added notifications received by the webhook
-* !tautulli remove [room_id] plain      - Remove the provided unencrypted [room_id] to the list of rooms to post the recently added notifications received by the webhook
-
-Tautulli instance and API Key:
-
-The module work with an instance of Tautulli accessible on URL defined by env variable `TAUTULLI_URL`
-In order to load art pictures you need to define an instance of Plex Media Server with its token as well by the two env variables `PLEX_MEDIA_SERVER_URL` and `PLEX_MEDIA_SERVER_TOKEN`
-You have to provide an api key by using the relevant command.
-
-Environ variables seen by command:
-
-* PLEX_MEDIA_SERVER_URL: Url accessible from the machine to an instance of Plex Media Server
-* PLEX_MEDIA_SERVER_TOKEN: Plex Token for the instance of Plex Media Server
-* TAUTULLI_URL: Url accessible from the machine to an instance of Tautulli
-* TAUTULLI_NOTIFIER_ADDR: Listening address for the Tautulli webhook handler target
-* TAUTULLI_NOTIFIER_PORT: Listening port for the Tautulli webhook handler target
-* BOT_OWNERS: Owner of the rooms in the list for the notification webhook
-
-Docker environment:
-
-Since the module needs access to the source of the running Tautulli instance volumes on both Docker (hemppa and Tautulli) should be defined and being visible each other.
-When running on Docker the env variables seen by command should be defined for the bot instance. 
-
-Example:
-
-* !tautulli movie
-* !tautulli add !OGEhHVWSdvArJzumhm:matrix.org plain
-* !tautulli remove !OGEhHVWSdvArJzumhm:matrix.org plain
-
-### Github based asset management
-
-This module was written for asset (machines, tasks and todo) management by
-mis-using GitHub issues and labels. It has been designed to be used with hackerspace
-environment but can be extended to any purpose.
-
-#### Github project setup
-
-* Create labels to github that represent for example different machines and spaces.
-You can create any number of them.
-* Define label colors for each type of asset. These are called domains in this module. 
-For example set all machine labels to be #B60205 and space labels to be #0E8A16. These 
-can be easily picked from color chooser.
-* Edit the repository description and add a json block describing the
-label domains and their colors (array format supports multiple colors per domain). For example:
-
-```
-Hackerspace machines, todo and stuff. domains={"koneet":["#BFDADC","#0CBBF0","#0CBBF0","#E15D19","#ED49CF"],"tilat":["#0E8A16","#1E8A16"]}
-```
-
-Make sure you type the description on one line - this is a silly Github limitation.
-
-* When creating issues, assign machine and/or space labels for them.
-For example, if a wood lathe is broken, create issue with labels
-"Wood lathe" and "Wood working room".
-
-#### Usage
-
-* !ghproj setrepo [repository] - Set repository for this room (room admin only)
-* !ghproj repo - Shows which repository this room tracks
-* !ghproj rmrepo - Remove repository from this room (room admin only)
-* !ghproj [domain] - List machine statuses in this domain
-
-Repository name must be in format TampereHacklab/Inventaario - you can
-use this as a example to see how the labels work.
 
 ### PeerTube search
 
@@ -652,27 +386,6 @@ Example:
 * !users classify add discord @*discordpuppet*:*
 * !users stats
 * !users roomstats
-
-### RASP (Gliding Weather forecast)
-
-Currently only Finnish RASP supported. Uses data from http://ennuste.ilmailuliitto.fi/
-
-#### Usage
-
-* !rasp [day] [hour]     - Fetch RASP for specified day and hour
-
-Day and hour can be omitted - fetches today's forecast if not set.
-PR welcome for supporting other data sources.
-
-### Mumble
-
-Show information about a configured mumble server,
-including version, how many users are connected, and ping time.
-
-#### Usage
-
-* !mumble                                 - Show info about the configured mumble server
-- !mumble (set|setserver) [host] ([port]) - Set the configured mumble server
 
 ## Bot setup
 
